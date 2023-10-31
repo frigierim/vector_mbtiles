@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                center: LatLng(35.68132332775388, 139.76712479771956),
+                center: const LatLng(35.68132332775388, 139.76712479771956),
                 zoom: 15,
                 maxZoom: 18,
                 // plugins: [VectorMapTilesPlugin()],
