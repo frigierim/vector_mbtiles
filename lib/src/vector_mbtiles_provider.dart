@@ -15,11 +15,11 @@ class VectorMBTilesProvider extends VectorTileProvider {
   ///  confused with the maximum zoom of the map widget. The map widget will
   ///  automatically use vector tiles from lower zoom levels once the maximum
   ///  supported by this provider is reached.
-  VectorMBTilesProvider({required String mbtilesPath, int maximumZoom = 16, int minimumZoom = 1})
+  VectorMBTilesProvider({required String mbtilesPath, int maximumZoom = 16, int minimumZoom = 1, bool fromAssets = true})
       : _mbtilesURL = mbtilesPath,
         _maximumZoom = maximumZoom,
         _minimumZoom = minimumZoom {
-    _mbTiles = MBTilesUtility(_mbtilesURL);
+    _mbTiles = MBTilesUtility(_mbtilesURL, fromAssets : fromAssets);
   }
   final String _mbtilesURL;
   final int _maximumZoom;

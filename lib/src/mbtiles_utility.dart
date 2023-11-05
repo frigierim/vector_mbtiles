@@ -12,10 +12,12 @@ import 'provider_exception.dart';
 class MBTilesUtility {
   /// A constructor of `MBTilesUtility` class.
   /// [_mbtilesPath] MBTiles path
-  MBTilesUtility(this._mbtilesPath) {
-    getDBFuture = _getDatabase(_mbtilesPath);
+  MBTilesUtility(this._mbtilesPath, { bool fromAssets = true }) {
+    _fromAssets = fromAssets;
+    getDBFuture = _getDatabase(_mbtilesPath, _fromAssets);
   }
   final String _mbtilesPath;
+  late final bool _fromAssets;
   Database? _database;
   late Future<Database> getDBFuture;
 
@@ -58,23 +60,27 @@ class MBTilesUtility {
     }
   }
 
-  Future<Database> _getDatabase(String url) async {
+  Future<Database> _getDatabase(String url, bool fromAssets) async {
     String databasesPath;
-    String dbFullPath;
-    final dbFilename = url.split('/').last;
+    var dbFullPath = url;
 
-    databasesPath = await getDatabasesPath();
-    dbFullPath = path.join(databasesPath, dbFilename);
+    if (fromAssets)
+    {
+      final dbFilename = url.split('/').last;
 
-    final exists = await databaseExists(dbFullPath);
-    if (!exists) {
-      final data = await rootBundle.load(url);
-      final List<int> bytes = data.buffer.asUint8List(
-        data.offsetInBytes,
-        data.lengthInBytes,
-      );
+      databasesPath = await getDatabasesPath();
+      dbFullPath = path.join(databasesPath, dbFilename);
 
-      await File(dbFullPath).writeAsBytes(bytes, flush: true);
+      final exists = await databaseExists(dbFullPath);
+      if (!exists) {
+        final data = await rootBundle.load(url);
+        final List<int> bytes = data.buffer.asUint8List(
+          data.offsetInBytes,
+          data.lengthInBytes,
+        );
+
+        await File(dbFullPath).writeAsBytes(bytes, flush: true);
+      }
     }
     return openDatabase(dbFullPath);
   }
